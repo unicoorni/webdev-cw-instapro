@@ -3,15 +3,18 @@ import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage } from "../index.js";
 import { getPosts } from "../api.js";
 
+import { formatDistance } from 'date-fns'
+import { ru } from 'date-fns/locale'
+
 export function renderPostsPageComponent({ appEl }) {
-	// TODO: реализовать рендер постов из api!
+	
 	console.log("Актуальный список постов:", posts);
 	
 	const getApiPosts = posts.map((postItem) => {
 			return {
 				userId: postItem.id,
 				userImageUrl: postItem.imageUrl,
-				postCreatedAt: "11.11.23",
+				postCreatedAt: formatDistance(new Date(postItem.createdAt), new Date, { locale: ru }),
 				description: postItem.description,
 				postId: postItem.user.id,
 				userName: postItem.user.name,
