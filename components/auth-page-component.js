@@ -92,6 +92,11 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           return;
         }
 
+        if (!imageUrl) {
+           alert("Не выбрана фотография");
+          return;
+        }
+
         loginUser({
           login: login,
           password: password,
