@@ -3,7 +3,7 @@
 import { posts } from "./index.js";
 
 const personalKey = "prod";
-const baseHost = "https://webdev-hw-api.vercel.app";
+const baseHost = " https://wedev-api.sky.pro";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 
 
@@ -72,4 +72,28 @@ export function uploadImage({ file }) {
   }).then((response) => {
     return response.json();
   });
+}
+
+export function addPost({ token, imageUrl }) {
+  const commentInputElement = document.getElementById('description')
+  return fetch(postsHost, {
+      method: 'POST',
+      body: JSON.stringify({
+          description: commentInputElement.value
+              .replaceAll('&', '&amp;')
+              .replaceAll('<', '&lt;')
+              .replaceAll('>', '&gt;')
+              .replaceAll('"', '&quot;'),
+          imageUrl,
+      }),
+      headers: {
+          Authorization: token,
+      },
+  }).then((response) => {
+      if (response.status === 400) {
+          alert('Нет фото или описания')
+      } else {
+          return response.json()
+      }
+  })
 }
