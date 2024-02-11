@@ -1,7 +1,11 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
 // "боевая" версия инстапро лежит в ключе prod
-const personalKey = "prod";
-const baseHost = "https://webdev-hw-api.vercel.app";
+import { renderApp, setPosts } from "./index.js";
+import { replaceSave } from "./helpers.js";
+
+const personalKey = "uni";
+//prod
+const baseHost = " https://wedev-api.sky.pro";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 
 export function getPosts({ token }) {
@@ -19,7 +23,7 @@ export function getPosts({ token }) {
       return response.json();
     })
     .then((data) => {
-      return data.posts;
+			return data.posts
     });
 }
 
@@ -67,4 +71,79 @@ export function uploadImage({ file }) {
   }).then((response) => {
     return response.json();
   });
+}
+
+export function addPost({ token, imageUrl }) {
+  const commentInputElement = document.getElementById('description')
+  return fetch(postsHost, {
+      method: 'POST',
+      body: JSON.stringify({
+          description: replaceSave(commentInputElement.value),
+          imageUrl,
+      }),
+      headers: {
+          Authorization: token,
+      },
+  }).then((response) => {
+      if (response.status === 400) {
+          alert('Нет фото или описания')
+      } else {
+          return response.json()
+      }
+  })
+}
+
+export function getPostsOfUser({ token, userId }) {
+  return fetch(`${postsHost}/user-posts/${userId}`, {
+      method: 'GET',
+      headers: {
+          Authorization: token,
+      },
+  })
+      .then((response) => {
+          if (response.status === 401) {
+              throw new Error('Нет авторизации')
+          }
+          return response.json()
+      })
+      .then((data) => {
+          setPosts(data.posts)
+          return data.posts
+      })
+      .catch((error) => {
+          alert('Кажется, у вас сломался интернет, попробуйте позже')
+          console.warn(error)
+      })
+}
+
+export function addLikePost({ token, postId }) {
+  return fetch(`${postsHost}/${postId}/like`, {
+      method: 'POST',
+      headers: {
+          Authorization: token,
+      },
+  }).then((response) => {
+      if (response.status === 401) {
+          alert('Лайкать посты могут только авторизованные пользователи')
+          throw new Error('Нет авторизации')
+      }
+
+      return response.json()
+  })
+}
+
+export function removeLikePost({ token, postId }) {
+  return fetch(`${postsHost}/${postId}/dislike`, {
+      method: 'POST',
+      headers: {
+          Authorization: token,
+      },
+  }).then((response) => {
+      if (response.status === 401) {
+          alert('Войдите, чтобы убрать лайк')
+          throw new Error('Нет авторизации')
+      }
+
+      return response.json()
+  })
 }

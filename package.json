@@ -1,0 +1,19 @@
+{
+  "name": "webdev-cw-instapro",
+  "version": "1.0.0",
+  "description": "MVP аналога популярной соц. сети для обмена фотографиями",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --mode development --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "animate.css": "^4.1.1",
+    "date-fns": "^3.3.1"
+  },
+  "devDependencies": {
+    "webpack": "^5.90.1",
+    "webpack-cli": "^5.1.4"
+  }
+}
